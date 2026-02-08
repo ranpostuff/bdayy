@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flip Book</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: sans-serif;
+            background-color: powderblue;
+        }
+
+        /* Centering container */
+        .book-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Book */
+        .book {
+            position: relative;
+            width: 340px;
+            aspect-ratio: 400 / 599;
+            cursor: pointer;
+            perspective: 1500px;
+            transform: translateX(50%);
+        }
+
+        /* Paper */
+        .paper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            transform-style: preserve-3d;
+            transform-origin: left;
+            transition: transform 0.6s ease;
+        }
+
+        /* Front & Back */
+        .front,
+        .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background-color: white;
+        }
+
+        .front {
+            border-left: 3px solid powderblue;
+        }
+
+        .back {
+            transform: rotateY(180deg);
+        }
+
+        /* Content */
+        .front-content,
+        .back-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Images fill page */
+        .front-content img,
+        .back-content img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Flip */
+        .paper.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        /* Tablet */
+        @media (max-width: 768px) {
+            .book {
+                width: 260px;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 480px) {
+            body {
+                align-items: flex-start;
+                padding-top: 20px;
+            }
+
+            .book {
+                width: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="book-wrapper">
+        <div id="book" class="book">
+
+            <div class="paper">
+                <div class="front">
+                    <div class="front-content">
+                        <img src="images-front1.png" alt="">
+                    </div>
+                </div>
+                <div class="back">
+                    <div class="back-content">
+                        <img src="images-back1.png" alt="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="paper">
+                <div class="front">
+                    <div class="front-content">
+                        <img src="images-front2.png" alt="">
+                    </div>
+                </div>
+                <div class="back">
+                    <div class="back-content">
+                        <img src="images-back2.png" alt="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="paper">
+                <div class="front">
+                    <div class="front-content">
+                        <img src="images-front3.png" alt="">
+                    </div>
+                </div>
+                <div class="back">
+                    <div class="back-content">
+                        <img src="images-back3.png" alt="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="paper">
+                <div class="front">
+                    <div class="front-content">
+                        <img src="images-front4.png" alt="">
+                    </div>
+                </div>
+                <div class="back">
+                    <div class="back-content">
+                        <img src="images-back4.png" alt="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="paper">
+                <div class="front">
+                    <div class="front-content">
+                        <img src="images-front5.png" alt="">
+                    </div>
+                </div>
+                <div class="back">
+                    <div class="back-content">
+                        <img src="images-back5.png" alt="">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const book = document.getElementById("book");
+        const papers = document.querySelectorAll(".paper");
+
+        let currentLocation = 0;
+        const numOfPapers = papers.length;
+
+        papers.forEach((paper, index) => {
+            paper.style.zIndex = numOfPapers - index;
+        });
+
+        book.addEventListener("click", (e) => {
+            const rect = book.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+
+            if (clickX > rect.width / 2) {
+                nextPage();
+            } else {
+                prevPage();
+            }
+        });
+
+        function nextPage() {
+            if (currentLocation < numOfPapers) {
+                papers[currentLocation].classList.add("flipped");
+                papers[currentLocation].style.zIndex = currentLocation;
+                currentLocation++;
+            }
+        }
+
+        function prevPage() {
+            if (currentLocation > 0) {
+                currentLocation--;
+                papers[currentLocation].classList.remove("flipped");
+                papers[currentLocation].style.zIndex =
+                    numOfPapers - currentLocation;
+            }
+        }
+    </script>
+
+</body>
+</html>
